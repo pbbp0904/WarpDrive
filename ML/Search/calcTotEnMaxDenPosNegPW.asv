@@ -1,0 +1,6 @@
+function [metricEnergyPos, metricEnergyNeg, metricMaxDen] = calcTotEnMaxDenPW(energyDensity)
+    energyDensity = energyDensity{1,1};
+    metricEnergyPos = sum(sum(sum(energyDensity(energyDensity>0))));
+    metricEnergyNeg = sum(sum(sum(energyDensity(energyDensity<0))));
+    metricMaxDenPos = max(max(max(energyDensity))));
+en

@@ -13,7 +13,7 @@ Zmom = squeeze(Ematrix{1,4}.*sign(Ematrix{1,1}));
 % Zmom = squeeze(Ematrix{1,4});
 
 
-steps = 20;
+steps = 2000;
 timestep = 10; 
 
 %startgrid = [3*round(length(Xmom))/4,3*round(length(Xmom))/4,round(length(Xmom)/2)];
@@ -36,7 +36,7 @@ view(90,0)
 
 for j = 1:yParticleNumber
     for k = 1:zParticleNumber
-        startgrid = [(length(Xmom)+1)/2,length(Xmom)/yParticleNumber*j,length(Xmom)/zParticleNumber*k/3 + length(Xmom)*(1/2-1/6)];
+        startgrid = [(length(Xmom)+1)/2,length(Xmom)*rand(),length(Xmom)*rand()];
         Pos = zeros(steps,3);
         Pos(1,:) = startgrid;
         for i = 1:steps-1

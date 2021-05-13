@@ -1,8 +1,8 @@
 %%%% Starting Params
 % Z Dimension Size
-zDim = 120;
+zDim = 30;
 % R Dimension Size
-rDim = 60;
+rDim = 15;
 % XYZ Padding
 padding = 3;
 % Z Symmetry
@@ -12,10 +12,10 @@ randomAd = 0;
 % Max Training for One Adjustment Scalar
 maxTrain = 1000000000;
 % Plateau Radius
-innerR = 12;
+innerR = 3;
 % Plateau Height
-goalHeight = 10;
-initialAdjustmentScalar = -goalHeight/40;
+goalHeight = 0.75;
+initialAdjustmentScalar = -goalHeight/15;
 
 
 %%%% Setup
@@ -24,11 +24,13 @@ initialAdjustmentScalar = -goalHeight/40;
 
 
 
-[shiftMatrixStart, points] = makeExponentialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
+%[shiftMatrixStart, points] = makeAlcubierreShiftMatrixPW(rDim,zDim,innerR,goalHeight,2);
+[shiftMatrixStart, points] = makeAlcubierreShiftMatrixPW(rDim,zDim,innerR,goalHeight,2);
 
 [X, Y] = meshgrid(1:30,1:60);
 [Xq, Yq] = meshgrid(1:29/59:30,1:59/119:60);
-shiftMatrixStart = interp2(X,Y,m',Xq,Yq)';
+%shiftMatrixStart = interp2(X,Y,shiftMatrix',Xq,Yq)';
+
 for i = 1:length(points)
     shiftMatrixStart(points(i,1),points(i,2)) = goalHeight;
 end
@@ -85,15 +87,15 @@ for rounds = 1:14
                             if zSym
                                 tSM(j,zDim-k+1) = tSM(j,zDim-k+1) + adjustmentScalar*(rVar);
                             end
-
+                            
                             % Update State
                             tM = makeMetricPW(tSM, padding);
                             tED = calcEnDenPW(tM);
                             tF = calcFitPW(tSM, tED, innerR, goalHeight);
-
+                            
                             % Calculate realtive fitness
                             metricRelFitness = tF-cF(i);
-
+                            
                             % If better than current metric
                             if metricRelFitness > 0
                                 % Set state
