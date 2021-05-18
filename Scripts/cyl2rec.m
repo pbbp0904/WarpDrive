@@ -31,7 +31,7 @@ end
 
 % Adding padding
 % Shifting array
-recArray(:,padding+1:2*r+padding,padding+1:2*r+padding,padding+1:2*r+padding) = recArray(:,:,:,:);
+recArray(:,padding+1:2*r+padding,padding+1:2*r+padding,padding+1:z+padding) = recArray(:,:,:,:);
 
 % Pad with outValue
 recArray(:,1:padding,:,:) = outValue;
@@ -39,7 +39,7 @@ recArray(:,:,1:padding,:) = outValue;
 recArray(:,:,:,1:padding) = outValue;
 recArray(:,2*r+padding+1:2*r+2*padding,:,:) = outValue;
 recArray(:,:,2*r+padding+1:2*r+2*padding,:) = outValue;
-recArray(:,:,:,2*r+padding+1:2*r+2*padding) = outValue;
+recArray(:,:,:,z+padding+1:z+2*padding) = outValue;
 
 end
 

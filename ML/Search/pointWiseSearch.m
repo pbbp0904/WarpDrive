@@ -1,8 +1,8 @@
 %%%% Starting Params
 % Z Dimension Size
-zDim = 30;
+zDim = 50;
 % R Dimension Size
-rDim = 15;
+rDim = 100;
 % XYZ Padding
 padding = 3;
 % Z Symmetry
@@ -12,10 +12,13 @@ randomAd = 0;
 % Max Training for One Adjustment Scalar
 maxTrain = 1000000000;
 % Plateau Radius
-innerR = 3;
-% Plateau Height
-goalHeight = 0.75;
-initialAdjustmentScalar = -goalHeight/15;
+innerR = 10;
+% Plateau Height, This is equivilent to the apparent warp velocity
+goalHeight = 10;
+initialAdjustmentScalar = goalHeight/2;
+
+% Use GPU
+useGPU = 1;
 
 
 %%%% Setup
@@ -24,8 +27,8 @@ initialAdjustmentScalar = -goalHeight/15;
 
 
 
-%[shiftMatrixStart, points] = makeAlcubierreShiftMatrixPW(rDim,zDim,innerR,goalHeight,2);
-[shiftMatrixStart, points] = makeAlcubierreShiftMatrixPW(rDim,zDim,innerR,goalHeight,2);
+%[shiftMatrixStart, points] = makeAlcubierreShiftMatrixPW(rDim,zDim,innerR,goalHeight,1);
+[shiftMatrixStart, points] = makeInitialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
 
 [X, Y] = meshgrid(1:30,1:60);
 [Xq, Yq] = meshgrid(1:29/59:30,1:59/119:60);
@@ -54,7 +57,7 @@ for rounds = 1:14
 
     % Update State
     cM{1} = makeMetricPW(cSM{1}, padding);
-    cED{1} = calcEnDenPW(cM{1});
+    cED{1} = calcEnDenPW(cM{1},useGPU);
     cF(1) = calcFitPW(cSM{1}, cED{1}, innerR, goalHeight);
     fprintf('Iter: %2i-%2i, Fit: %.8f, AdScalar: %.4f\n',rounds,1,cF(1),adjustmentScalar);
     drawWarpFieldPW(cSM{end})
@@ -90,7 +93,8 @@ for rounds = 1:14
                             
                             % Update State
                             tM = makeMetricPW(tSM, padding);
-                            tED = calcEnDenPW(tM);
+                            gpuDevice(1);
+                            tED = calcEnDenPW(tM,useGPU);
                             tF = calcFitPW(tSM, tED, innerR, goalHeight);
                             
                             % Calculate realtive fitness
