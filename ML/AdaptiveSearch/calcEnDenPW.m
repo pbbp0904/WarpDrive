@@ -14,13 +14,19 @@ else
 end
 
 if useGPU
+    gpuDevice(1);
     metricGPU = {};
     for i = 1:4
         for j = 1:4
             metricGPU{i,j} = gpuArray(metric{i,j});
         end
     end
-    enDen = met2den(metricGPU);
+    enDenGPU = met2den(metricGPU);
+    for i = 1:4
+        for j = 1:4
+            enDen{i,j} = gather(enDenGPU{i,j});
+        end
+    end
 else
     enDen = met2den(metric);
 end

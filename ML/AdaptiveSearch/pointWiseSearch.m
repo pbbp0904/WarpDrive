@@ -1,21 +1,27 @@
 %%%% Starting Params
 % Z Dimension Size
-zDim = 50;
+zDim = 61;
 % R Dimension Size
-rDim = 100;
+rDim = 120;
 % Plateau Radius
-innerR = 10;
+innerR = 5;
+% Plateau depth
+depth = 4;
+% Plateau Scale
+sizeScale = 2;
+%Plateau donut offset from axis
+offset = 20;
 % Plateau Height, This is equivilent to the apparent warp velocity
 goalHeight = 10;
 % XYZ Padding
 padding = 3;
 % Z Symmetry
-zSym = 1;
+zSym = 0;
 
 % Max passes for one adjustment scalar
 maxLoop = 1000000000;
 % Max number of decreases of adjustment scalar
-maxIter = 16;
+maxIter = 100;
 
 % Starting magnitude of adjustment scalar
 initialAdjustmentScalar = goalHeight/10;
@@ -26,30 +32,42 @@ randomAd = 0;
 tryGPU = 1;
 
 % Use slicing
-useSlicing = 1;
+useSlicing = 0;
 % Slice distance
-sliceDistance = 5;
+sliceDistance = 6;
 
 
 %%%% Setup
 % Makes the initial shift matrix with the plateau
-% also computes the points inside the radius that the interation should ignore
+% also computes the points inside the plateau that the interation should ignore
 
-[shiftMatrixStart, plateauPoints] = makeExponentialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
-shiftMatrixStart = round(shiftMatrixStart,3);
+%[shiftMatrixStart, plateauPoints] = makeExponentialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
+%shiftMatrixStart = round(shiftMatrixStart,1);
 %[shiftMatrixStart, plateauPoints] = makeInitialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
+%[shiftMatrixStart, plateauPoints] = makeCylindricalShiftMatrixPW(rDim,zDim,innerR,depth,goalHeight);
+%[shiftMatrixStart, plateauPoints] = makeDonutShiftMatrixPW(rDim,zDim,innerR,depth,offset,goalHeight);
+[shiftMatrixStart, plateauPoints] = makeStreamlineShiftMatrixPW(rDim,zDim,sizeScale,goalHeight);
 
 %[X, Y] = meshgrid(1:30,1:60);
 %[Xq, Yq] = meshgrid(1:29/59:30,1:59/119:60);
 %shiftMatrixStart = interp2(X,Y,shiftMatrix',Xq,Yq)';
+
+% shiftMatrixStart = zeros(rDim,zDim);
+% plateauPoints = [1,round((zDim+1)/2)];
+% shiftMatrixStart(1,round((zDim+1)/2)) = goalHeight;
 
 % Make sure desired points are at the goalHeight
 for i = 1:length(plateauPoints)
     shiftMatrixStart(plateauPoints(i,1),plateauPoints(i,2)) = goalHeight;
 end
 
+% drawWarpFieldPW(shiftMatrixStart)
+% pause
+
 clear RunData
 rng('default')
+format long
+tic
 
 % Save startup values
 RunData.zDim = zDim;
@@ -60,11 +78,13 @@ RunData.randomAd = randomAd;
 RunData.maxLoop = maxLoop;
 RunData.maxIter = maxIter;
 RunData.innerR = innerR;
+RunData.depth = depth;
+RunData.offset = offset;
+RunData.sizeScale = sizeScale;
 RunData.goalHeight = goalHeight;
 RunData.initialAdjustmentScalar = initialAdjustmentScalar;
 RunData.tryGPU = tryGPU;
-RunData.useSlicing = useSlicing;
-RunData.sliceDistance = sliceDistance;
+RunData.plateauPoints = plateauPoints;
 
 saveIndex = 1;
 validData = 1;
@@ -86,7 +106,10 @@ RunData.totalEnergies{saveIndex} = totalEnergy;
 RunData.rounds{saveIndex} = 1;
 RunData.iteration{saveIndex} = 1;
 RunData.pointChanged{saveIndex} = [0,0];
+RunData.useSlicing{saveIndex} = useSlicing;
+RunData.sliceDistance{saveIndex} = sliceDistance;
 RunData.validData{saveIndex} = 1;
+RunData.timeStamp{saveIndex} = toc;
 saveIndex = saveIndex + 1;
 
 
@@ -116,6 +139,7 @@ for rounds = 1:maxIter
         
         %%%% Begin one pass of all valid points to build
         for j = randperm(length(validBuildPoints))
+        %for j = 1:length(validBuildPoints)
             r = validBuildPoints(j,1);
             z = validBuildPoints(j,2);
             if abs(shiftMatrix(r,z) + adjustmentScalar) <= goalHeight
@@ -186,9 +210,9 @@ for rounds = 1:maxIter
                 if energyReduction
                     % Update State
                     shiftMatrix = tempShiftMatrix;
-                    energyPos = energyPos-(slicedEnergyPos-slicedTempEnergyPos);
-                    energyNeg = energyNeg-(slicedEnergyNeg-slicedTempEnergyNeg);
-                    totalEnergy = abs(energyPos)+abs(energyNeg);
+                    energyPos = energyPos-(abs(slicedEnergyPos)-abs(slicedTempEnergyPos));
+                    energyNeg = energyNeg-(abs(slicedEnergyNeg)-abs(slicedTempEnergyNeg));
+                    totalEnergy = energyPos+energyNeg;
 
                     % Save State
                     RunData.shiftMatricies{saveIndex} = shiftMatrix;
@@ -198,50 +222,74 @@ for rounds = 1:maxIter
                     RunData.rounds{saveIndex} = rounds;
                     RunData.iteration{saveIndex} = i+1;
                     RunData.pointChanged{saveIndex} = [r,z];
+                    RunData.useSlicing{saveIndex} = useSlicing;
+                    RunData.sliceDistance{saveIndex} = sliceDistance;
                     RunData.validData{saveIndex} = validData;
+                    RunData.timeStamp{saveIndex} = toc;
                     saveIndex = saveIndex + 1;
 
                     % Print changed point
                     fprintf(repmat('\b',1,failTracker))
-                    fprintf('Built Point At: %4i, %4i,  Energy: %.8f \n',r,z,totalEnergy);
+                    fprintf('Built Point At: %4i, %4i      Energy Estimate: %.8f \n',r,z,totalEnergy);
                     failTracker = 0;
                 else
                     fprintf('.')
                     failTracker = failTracker + 1;
                 end
+                
+
+                
+                
             end
         end
         
         
-        % Compute full region every pass to verify data
+        % Display Graph
+        drawWarpFieldPW(shiftMatrix)
+        
+        % Compute full region every pass
         metric = makeMetricPW(shiftMatrix, padding);
         energyDensity = calcEnDenPW(metric, tryGPU);
         [energyPosCheck, energyNegCheck] = calcTotalEnergyPW(energyDensity);
         totalEnergyCheck = abs(energyPosCheck) + abs(energyNegCheck);
 
-        if totalEnergyCheck ~= totalEnergy || validData == 0
-            negDiff = energyNeg-energyNegCheck;
-            posDiff = energyPos-energyPosCheck;
-            totDiff = totalEnergy-totalEnergyCheck;
-            if negDiff > 10^-8 || posDiff > 10^-8 || totDiff > 10^-8 || energyNeg < 0 || energyPos < 0 || totalEnergy < 0 || validData == 0
-                fprintf("Warning Check Failed\n")
-                validData = 0;
-            end
-        end
-        
+        % Update State
+        shiftMatrix = tempShiftMatrix;
+        energyPos = energyPosCheck;
+        energyNeg = energyNegCheck;
+        totalEnergy = totalEnergyCheck;
 
-        % Display Graph
-        drawWarpFieldPW(shiftMatrix)
+        % Save State
+        RunData.shiftMatricies{saveIndex} = shiftMatrix;
+        RunData.totalPosEnergies{saveIndex} = energyPos;
+        RunData.totalNegEnergies{saveIndex} = energyNeg;
+        RunData.totalEnergies{saveIndex} = totalEnergy;
+        RunData.rounds{saveIndex} = rounds;
+        RunData.iteration{saveIndex} = i+1;
+        RunData.pointChanged{saveIndex} = [0,0];
+        RunData.useSlicing{saveIndex} = useSlicing;
+        RunData.sliceDistance{saveIndex} = sliceDistance;
+        RunData.validData{saveIndex} = validData;
+        RunData.timeStamp{saveIndex} = toc;
+        saveIndex = saveIndex + 1;
         
         % Print iteration info
         fprintf(repmat('\b',1,failTracker))
-        fprintf('Iter: %2i-%2i, Energy: %.8f, AdScalar: %.4f\n',rounds,i+1,totalEnergy,adjustmentScalar);
-        
+        fprintf('\nIter: %2i-%2i, Energy: %.8f, AdScalar: %.8f\n\n',rounds,i+1,totalEnergy,adjustmentScalar);
         % If no point is changed in a pass, break to the next round
         if shiftMatrix==oldShiftMatrix
             break
         end
         i = i + 1;
+    end
+    
+    % Save RunData every round
+    save(strcat("RunData-",num2str(rounds)),"RunData")
+    
+    % Increase slicing accuracy every round
+    sliceDistance = sliceDistance + 1;
+    if sliceDistance > 15
+        useSlicing = 0;
     end
 end
 
