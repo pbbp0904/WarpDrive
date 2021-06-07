@@ -11,7 +11,7 @@
 
 maxGrid = 100;
 
-rs = 10;
+rs = 0.2;
 X = 1:maxGrid;
 Y = 1:maxGrid;
 Z = 1:maxGrid;
