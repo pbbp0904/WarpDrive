@@ -1,6 +1,6 @@
 function [energyDensity] = met2den(metricTensor)
 %MET2DEN Coverts a catesian metric tensor to the corresponding energy 
-%   densitiy tensor using the Einstien Field Equations
+%   density tensor using the Einstien Field Equations
 %   Takes an input of a 4x4 cell array as the metric tensor and outputs a
 %   4x4 cell array as the energy density tensor
 %
