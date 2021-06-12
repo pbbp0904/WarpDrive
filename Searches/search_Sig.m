@@ -1,93 +1,90 @@
 % Function to search through various sigmas for the alcubierre metric
-<<<<<<< HEAD
-spatialResolution = 1;
-spatialExtent = [100,100,100];
-R = 10;
-R = R/spatialResolution;
-gridSize = spatialExtent./spatialResolution;
 
-sig(1) = 0.001;
-=======
-spatialResolution = 0.5;
-WorldSize = 10;
+spatialResolution = 1; % meters/grid point
+WorldSize = 200; % meters
 spatialExtent = [WorldSize,WorldSize,WorldSize];
-R_input = 2;
+R_input = 40; % meters
 R = R_input/spatialResolution;
 gridSize = spatialExtent./spatialResolution;
 
-sig = linspace(0.1,4,30);
-vs = 2;
->>>>>>> af02d345e81f616ee9145db19b70f8276a2bfada
+sig = linspace(0,3,31);
+vs = 1;
 
-%% Run numerical code
-energies = [];
-energiesPos = [];
+
+%% Run through sigmas
+energiesNumerical = [];
+energiesNumerical2 = [];
+shiftMatricies = {};
+shiftMatrixSlice = {};
 Z = {};
-
-<<<<<<< HEAD
-for i = 2:100
-    sig(i) = sig(i-1)*1.2;
-    AM = metricGPUGet_Alcubierre(0,1,R,sig(i),gridSize);
-=======
-for i = 1:length(sig)
-    AM = metricGPUGet_Alcubierre(0,vs,R,sig(i),gridSize);
->>>>>>> af02d345e81f616ee9145db19b70f8276a2bfada
-    Z{i} = met2den(AM);
-    energies(i,:,:) = den2en(Z{i});
-    energiesPos(i) = den2enPos(Z{i});
-end
-
-<<<<<<< HEAD
-totalEnergy = energies(:,1,1);
-
-=======
-%% Compare to analytical formula 
-Range = [-spatialExtent/2 spatialExtent/2];
-
+Z2 = {};
+Range = [-WorldSize/2 WorldSize/2];
 E = zeros(1,length(sig));
+
 for i = 1:length(sig)
-   E(i) = Analytic_Alcubierre_Energy(sig(i),vs,R_input,Range,Range,Range);
+    % Run numerical code #1
+    %AM = metricGPUGet_Alcubierre(0,vs,R,sig(i),gridSize);
+    %Z{i} = met2den(AM);
+    %energiesNumerical(i,:,:) = den2en(Z{i}).*spatialResolution^2;
+    
+    % Run numerical code #2
+    shiftMatricies{i} = makeAlcubierreShiftMatrixPW(round(gridSize(1)/2),gridSize(3),R_input,vs,sig(i));
+    AM2 = makeMetricPW(shiftMatricies{i}, 3);
+    Z2{i} = met2den(AM2);
+    energiesNumerical2(i,:,:) = den2en(Z2{i}).*spatialResolution^2;
+    
+    
+    shiftMatrixSlice{i} = shiftMatricies{i}(:,round(gridSize(1)/2));
+    
+    
+    % Compare to analytical formula 
+    E(i) = Analytic_Alcubierre_Energy(sig(i),vs,R_input,Range,Range,Range);
+    fprintf("Done with Sig=%i\n",sig(i));
 end
+
+
 
 %% Plot results
->>>>>>> af02d345e81f616ee9145db19b70f8276a2bfada
-% figure()
-% plot(sig,energiesPos);
-% ylim([0 max(energiesPos)])
 figure()
-<<<<<<< HEAD
-plot(sig(2:end),totalEnergy(2:end))
+hold on
+for i = 1:length(sig)
+    plot(shiftMatrixSlice{i})
+end
+
+figure()
 % ylim([min(energies(:,1,1)) 0])
-=======
 subplot(1,3,1)
-plot(sig,energies(:,1,1))
+hold on
+%plot(sig,energiesNumerical(:,1,1))
+plot(sig,energiesNumerical2(:,1,1))
 % ylim([min(energies(:,1,1)) 0])
 set(gca,'Yscale','log')
 xlabel('\sigma')
-ylabel('Energy [a.u.]')
+ylabel('Energy [J]')
+legend('Numerical 1','Numerical 2')
 title('Numerical Approach')
 
 subplot(1,3,2)
 plot(sig,E)
 set(gca,'Yscale','log')
 xlabel('\sigma')
-ylabel('Energy [a.u.]')
+ylabel('Energy [J]')
 title('Analytical Approach')
 
 subplot(1,3,3)
 hold on
-plot(sig,energies(:,1,1))
+%plot(sig,energiesNumerical(:,1,1))
+plot(sig,energiesNumerical2(:,1,1))
 plot(sig,E)
 set(gca,'Yscale','log')
 xlabel('\sigma')
-ylabel('Energy [a.u.]')
+ylabel('Energy [J]')
 title('Result Comparison')
-legend('Numerical','Analytical')
+legend('Numerical 1','Analytical')
 box on
 set(gcf,'color','w');
 sgtitle(['Alcubierre Metric: R = ' num2str(R_input) ', v_s = ' num2str(vs) ', \sigma = \{' num2str(min(sig)) ', ' num2str(max(sig)) '\}, World Size = ' num2str(WorldSize) ', Res = ' num2str(spatialResolution)])
 
->>>>>>> af02d345e81f616ee9145db19b70f8276a2bfada
 % figure()
 % plot(sig,energies(:,2,2))
 % %ylim([min(energies(:,2,2)) 0])
@@ -99,9 +96,6 @@ sgtitle(['Alcubierre Metric: R = ' num2str(R_input) ', v_s = ' num2str(vs) ', \s
 % ylim([0 max(energies(:,3,3))])
 % figure()
 % plot(sig,energies(:,1,2))
-<<<<<<< HEAD
 % ylim([min(energies(:,1,2)) 0])
-=======
 % ylim([min(energies(:,1,2)) 0])
 
->>>>>>> af02d345e81f616ee9145db19b70f8276a2bfada
