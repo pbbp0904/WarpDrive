@@ -1,12 +1,12 @@
 %%%% Starting Params
 % Z Dimension Size
-zDim = 61;
+zDim = 64;
 % R Dimension Size
-rDim = 120;
+rDim = 64;
 % Plateau Radius
-innerR = 5;
+innerR = 15;
 % Plateau depth
-depth = 4;
+depth = 16;
 % Plateau Scale
 sizeScale = 2;
 %Plateau donut offset from axis
@@ -21,7 +21,7 @@ zSym = 0;
 % Max passes for one adjustment scalar
 maxLoop = 1000000000;
 % Max number of decreases of adjustment scalar
-maxIter = 100;
+maxIter = 11;
 
 % Starting magnitude of adjustment scalar
 initialAdjustmentScalar = goalHeight/10;
@@ -32,9 +32,9 @@ randomAd = 0;
 tryGPU = 1;
 
 % Use slicing
-useSlicing = 0;
+useSlicing = 1;
 % Slice distance
-sliceDistance = 6;
+sliceDistance = 5;
 
 
 %%%% Setup
@@ -44,9 +44,9 @@ sliceDistance = 6;
 %[shiftMatrixStart, plateauPoints] = makeExponentialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
 %shiftMatrixStart = round(shiftMatrixStart,1);
 %[shiftMatrixStart, plateauPoints] = makeInitialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
-%[shiftMatrixStart, plateauPoints] = makeCylindricalShiftMatrixPW(rDim,zDim,innerR,depth,goalHeight);
+[shiftMatrixStart, plateauPoints] = makeCylindricalShiftMatrixPW(rDim,zDim,innerR,depth,goalHeight);
 %[shiftMatrixStart, plateauPoints] = makeDonutShiftMatrixPW(rDim,zDim,innerR,depth,offset,goalHeight);
-[shiftMatrixStart, plateauPoints] = makeStreamlineShiftMatrixPW(rDim,zDim,sizeScale,goalHeight);
+%[shiftMatrixStart, plateauPoints] = makeStreamlineShiftMatrixPW(rDim,zDim,sizeScale,goalHeight);
 
 %[X, Y] = meshgrid(1:30,1:60);
 %[Xq, Yq] = meshgrid(1:29/59:30,1:59/119:60);
@@ -118,7 +118,7 @@ for rounds = 1:maxIter
     % Flips sign and divides by sqrt(2) every round
     adjustmentScalar = -adjustmentScalar/sqrt(2);
 
-    fprintf('Iter: %2i-%2i, Energy: %.8f, AdScalar: %.4f\n',rounds,1,totalEnergy,adjustmentScalar);
+    fprintf('Iter: %2i-%2i, Energy: %.8e, AdScalar: %.4f\n',rounds,1,totalEnergy,adjustmentScalar);
     drawWarpFieldPW(shiftMatrix)
 
     % Multipass Loop
@@ -200,6 +200,19 @@ for rounds = 1:maxIter
                 % Check if the energy in the region is now less
                 if slicedTempTotalEnergy < slicedTotalEnergy
                     energyReduction = 1;
+%                     disp("")
+%                     disp(totalEnergy-(slicedTotalEnergy-slicedTempTotalEnergy))
+%                     disp("")
+%                     % Compute full region every pass
+%                     metric = makeMetricPW(tempShiftMatrix, padding);
+%                     energyDensity = calcEnDenPW(metric, tryGPU);
+%                     [energyPosCheck, energyNegCheck] = calcTotalEnergyPW(energyDensity);
+%                     totalEnergyCheck = abs(energyPosCheck) + abs(energyNegCheck);
+%                     disp(totalEnergyCheck)
+%                     disp("")
+%                     disp(totalEnergyCheck-(totalEnergy-(slicedTotalEnergy-slicedTempTotalEnergy)))
+%                     disp("")
+%                     pause(1)
                 else
                     energyReduction = 0;
                 end
@@ -230,16 +243,12 @@ for rounds = 1:maxIter
 
                     % Print changed point
                     fprintf(repmat('\b',1,failTracker))
-                    fprintf('Built Point At: %4i, %4i      Energy Estimate: %.8f \n',r,z,totalEnergy);
+                    fprintf('Built Point At: %4i, %4i      Energy Estimate: %.8e \n',r,z,totalEnergy);
                     failTracker = 0;
                 else
                     fprintf('.')
                     failTracker = failTracker + 1;
                 end
-                
-
-                
-                
             end
         end
         
@@ -254,7 +263,6 @@ for rounds = 1:maxIter
         totalEnergyCheck = abs(energyPosCheck) + abs(energyNegCheck);
 
         % Update State
-        shiftMatrix = tempShiftMatrix;
         energyPos = energyPosCheck;
         energyNeg = energyNegCheck;
         totalEnergy = totalEnergyCheck;
@@ -275,7 +283,7 @@ for rounds = 1:maxIter
         
         % Print iteration info
         fprintf(repmat('\b',1,failTracker))
-        fprintf('\nIter: %2i-%2i, Energy: %.8f, AdScalar: %.8f\n\n',rounds,i+1,totalEnergy,adjustmentScalar);
+        fprintf('\nIter: %2i-%2i, Energy: %.8e, AdScalar: %.8f, Slicing Error: %.4e\n\n',rounds,i+1,totalEnergy,adjustmentScalar,RunData.totalEnergies{saveIndex-1}-RunData.totalEnergies{saveIndex-2});
         % If no point is changed in a pass, break to the next round
         if shiftMatrix==oldShiftMatrix
             break
@@ -286,11 +294,6 @@ for rounds = 1:maxIter
     % Save RunData every round
     save(strcat("RunData-",num2str(rounds)),"RunData")
     
-    % Increase slicing accuracy every round
-    sliceDistance = sliceDistance + 1;
-    if sliceDistance > 15
-        useSlicing = 0;
-    end
 end
 
 drawWarpFieldPW(shiftMatrix)
