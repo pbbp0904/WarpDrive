@@ -79,61 +79,35 @@ yy=get(sl,'YData');
 zz=get(sl,'ZData');
 set(gcf,'color','w');
 %% Test Code
-filename = 'testAnimated.gif';
-
-
-rotationAmount = 90; % Total degrees of rotation in the gif
-numberOfFrames = 24*10; % Total number of frames
-frameDuration = 1/24; % Length of a single frame in seconds
-logValue = 0.7;
-
-f = figure(5)
-% styleName = 'WarpDriveStyle';
-% s=hgexport('readstyle',styleName);
-
-filename = 'testAnimated.gif';
-
-% numberOfFrame = round(max(cellfun('size',xx,2))/10);
-for j = 1:round(max(cellfun('size',xx,2))/10)
-clf
+figure(5)
 hold on
 for i = 1:size(xx,1)    
-        plot3(xx{i,1},yy{i,1},zz{i,1},'Color',[0,0,1,0.1],'LineWidth',1)
+        plot3(xx{i,1},yy{i,1},zz{i,1},'Color',[0,0,1,0.2],'LineWidth',3)
 end
+
+for j = 1:max(cellfun('size',xx,2))
+
 for i = 1:size(xx,1)    
-    if size(xx{i,1},2) > j 
-        plot3(xx{i,1}(1:j),yy{i,1}(1:j),zz{i,1}(1:j),'b','LineWidth',2)        
+    if size(xx{i,1},2) > j
+        plot3(xx{i,1}(1:j),yy{i,1}(1:j),zz{i,1}(1:j),'b','LineWidth',3)        
     end
 end
-
-% for i = 1:size(xx,1)    
-%     if size(xx{i,1},2) > j && mod(j,10) == 0
-%         scatter3(xx{i,1}(j),yy{i,1}(j),zz{i,1}(j),'Filled','MarkerFaceColor','r')        
-%     end
-% end
-
-
-    set(gca,'DataAspectRatio',[1 1 1]);
-    view(j*rotationAmount/numberOfFrames,20);
-
-     
-
-
-    % Set style
-%     s.Format = 'png';
-%     hgexport(h,'temp_dummy',s,'applystyle', true);
-    frame = getframe(f); 
-    im = frame2im(frame); 
-    [imind,cm] = rgb2ind(im,256); 
-    
-%     Write to the GIF file 
-    if j == 1 
-        imwrite(imind,cm,filename,'gif', 'Loopcount',inf,'DelayTime',frameDuration); 
-    else 
-        imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',frameDuration); 
-    end 
+view(3)
+drawnow
+pause(0.01)
 end
-% 
-% imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',frameDuration);
+
+
+axis tight;
+set(gca,'BoxStyle','full','Box','on')
+
+% set(gca,'SortMethod','childorder');
+% h=streamparticles(verts,1,...
+% 	'Animate',2,'FrameRate',60,...
+% 	'ParticleAlignment','on',...
+% 	'MarkerEdgeColor','none',...
+% 	'MarkerFaceColor','red',...
+% 	'Marker','o');
+
 
 

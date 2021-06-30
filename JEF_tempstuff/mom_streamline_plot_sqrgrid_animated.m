@@ -1,4 +1,4 @@
-function mom_streamline_plot_sqrgrid_animated(Metric,WorldSize,spatialRes,runname,Zcuts,gridres,Xlims,Ylims,scale)
+function mom_streamline_plot_sqrgrid_animated(Metric,WorldSize,spatialRes,runname,Xpoints,Ypoints,Zpoints,scale)
 %FUN_VISDATA Summary of this function goes here
 %   Detailed explanation goes here
 EarthMass = 5.972*10^(24); %kg
@@ -38,9 +38,9 @@ X = linspace(0,WorldSize(1),size(Energy,1));
 Y = linspace(0,WorldSize(2),size(Energy,2));
 Z = linspace(0,WorldSize(3),size(Energy,3));
 
-Xpoints = Zcuts;
-Zpoints = linspace(Xlims(1),Xlims(2),gridres);
-Ypoints = linspace(Ylims(1),Ylims(2),gridres);
+% Xpoints = Zcuts;
+% Zpoints = linspace(Xlims(1),Xlims(2),gridres);
+% Ypoints = linspace(Ylims(1),Ylims(2),gridres);
 
 
 figure()
