@@ -4,8 +4,10 @@ A = RunData.shiftMatricies{end};
 B = cat(1,flipud(A),A);
 
 h = figure;
-styleName = 'WarpDrive1';
-s=hgexport('readstyle',styleName);
+load('WarpDriveStyle');
+
+% styleName = 'WarpDrive1';
+% s=hgexport('readstyle',styleName);
 
 filename = 'testAnimated.gif';
 
@@ -19,7 +21,7 @@ for i = 1:iMod:length(RunData.shiftMatricies)
     B = cat(1,flipud(A),A);
     
     % Radial Trim
-    B = B(10:110,:);
+    %B = B(10:110,:);
     
     % Redraw plot
     surf(B,'FaceColor','interp','EdgeColor','interp','FaceLighting','gouraud');
@@ -27,7 +29,7 @@ for i = 1:iMod:length(RunData.shiftMatricies)
     % Set limits
     xlim([1 64])
     ylim([1 100])
-    zlim([-0.5 10.2])
+    zlim([1.02*min(B,[],'all'), 1.02*max(B,[],'all')])
     
     % Set labels
     xlabel('Z')
@@ -38,7 +40,7 @@ for i = 1:iMod:length(RunData.shiftMatricies)
     colormap(turbo);
     
     % Change view
-    set(gca,'DataAspectRatio',[3 3 1]);
+    set(gca,'DataAspectRatio',[20 20 1]);
     view(i*rotationAmount/length(RunData.shiftMatricies),20);
     
     % Set style
