@@ -1,14 +1,14 @@
 % Function to search through various sigmas for the alcubierre metric
 
 spatialResolution = 1; % meters/grid point
-WorldSize = 200; % meters
+WorldSize = 100; % meters
 spatialExtent = [WorldSize,WorldSize,WorldSize];
-R_input = 40; % meters
+R_input = 20; % meters
 R = R_input/spatialResolution;
 gridSize = spatialExtent./spatialResolution;
 
-sig = linspace(0,3,31);
-vs = 1;
+sig = linspace(0.1,1,10);
+vs = 100;
 
 
 %% Run through sigmas
@@ -56,7 +56,7 @@ figure()
 subplot(1,3,1)
 hold on
 %plot(sig,energiesNumerical(:,1,1))
-plot(sig,energiesNumerical2(:,1,1))
+plot(sig,-abs(energiesNumerical2(:,1,1)))
 % ylim([min(energies(:,1,1)) 0])
 set(gca,'Yscale','log')
 xlabel('\sigma')
@@ -74,7 +74,7 @@ title('Analytical Approach')
 subplot(1,3,3)
 hold on
 %plot(sig,energiesNumerical(:,1,1))
-plot(sig,energiesNumerical2(:,1,1))
+plot(sig,-abs(energiesNumerical2(:,1,1)))
 plot(sig,E)
 set(gca,'Yscale','log')
 xlabel('\sigma')

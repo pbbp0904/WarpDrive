@@ -1,11 +1,11 @@
-function fun_visdata(Metric,StressEnergyTensor,WorldSize,CountourRes,runname)
+function fun_visdata(Metric,WorldSize,spatialRes,runname)
 %FUN_VISDATA Summary of this function goes here
 %   Detailed explanation goes here
 EarthMass = 5.972*10^(24); %kg
 c = 2.998*10^6; %m/s
-
+StressEnergyTensor = met2den(Metric);
 Energy = StressEnergyTensor{1,1};
-Energy = squeeze(Energy);
+Energy = squeeze(Energy)*spatialRes^2;
 
 MomX = StressEnergyTensor{1,2};
 MomX = squeeze(MomX);
@@ -87,13 +87,13 @@ ylim(ylimits)
 zlim(zlimits)
 
 fig = subplot(1,2,2);
-beta = squeeze(Metric{1,2});
+beta = squeeze(Metric{1,4});
 surf(X,Y,abs(beta(:,:,round(end/2))),'FaceColor','interp','FaceLighting','gouraud','EdgeColor','none')
 camlight('headlight')
 xlabel('X [m]')
 ylabel('Y [m]')
 zlabel('|\beta|')
-a = annotation('textbox','String',{['E_{pos}: ' num2str(sum(posEnergy,'all')) ' J'],['M_{pos}: ' num2str(sum(posEnergy,'all')/c^2/EarthMass) ' M_E'],['E_{neg}: ' num2str(sum(negEnergy,'all')) ' J'],['M_{neg}: ' num2str(sum(negEnergy,'all')/c^2/EarthMass) ' M_E']},'Position',fig.Position,'Vert','top','HorizontalAlignment','left','FitBoxToText','on');
+a = annotation('textbox','String',{['E_{pos}: ' num2str(sum(posEnergy,'all'),2) ' J'],['M_{pos}: ' num2str(round(sum(posEnergy,'all')/c^2/EarthMass),2) ' M_E'],['E_{neg}: ' num2str(round(sum(negEnergy,'all')),2) ' J'],['M_{neg}: ' num2str(round(sum(negEnergy,'all')/c^2/EarthMass),2) ' M_E']},'Position',fig.Position,'Vert','top','HorizontalAlignment','left','FitBoxToText','on');
 a.EdgeColor = 'w';
 cbar = colorbar('southoutside');
 cbar.Label.String = ['\beta'];

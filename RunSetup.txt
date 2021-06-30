@@ -1,0 +1,2 @@
+kT,stepsize,startperct,Therm_Perct,steps,burn_perct,Res,subloops,minXRDcounts,numGRBs
+1,0.1,1,2,50000,0.5,10,40,40,6
