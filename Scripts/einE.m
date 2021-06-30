@@ -7,7 +7,7 @@ c = 2.99792*10^8;
 enDen_ = cell(4,4);
 for mu = 1:4
     for nu = 1:4
-        enDen_{mu,nu} = (2/pi).*c^4./(8.*pi.*G).*E{mu,nu}; % Fudged by 2/pi to align with Schwarzschild solution
+        enDen_{mu,nu} = c^4./(8.*pi.*G).*E{mu,nu};
     end
 end
 

@@ -4,15 +4,15 @@ zDim = 64;
 % R Dimension Size
 rDim = 64;
 % Plateau Radius
-innerR = 15;
+innerR = 10;
 % Plateau depth
-depth = 16;
+depth = 36;
 % Plateau Scale
 sizeScale = 2;
 %Plateau donut offset from axis
 offset = 20;
 % Plateau Height, This is equivilent to the apparent warp velocity
-goalHeight = 10;
+goalHeight = 2;
 % XYZ Padding
 padding = 3;
 % Z Symmetry
@@ -41,6 +41,7 @@ sliceDistance = 5;
 % Makes the initial shift matrix with the plateau
 % also computes the points inside the plateau that the interation should ignore
 
+%[shiftMatrixStart, plateauPoints] = makeAlcubierreShiftMatrixPW(rDim,zDim,innerR,goalHeight,0.5);
 %[shiftMatrixStart, plateauPoints] = makeExponentialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
 %shiftMatrixStart = round(shiftMatrixStart,1);
 %[shiftMatrixStart, plateauPoints] = makeInitialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
@@ -52,6 +53,7 @@ sliceDistance = 5;
 %[Xq, Yq] = meshgrid(1:29/59:30,1:59/119:60);
 %shiftMatrixStart = interp2(X,Y,shiftMatrix',Xq,Yq)';
 
+% Point shift matrix
 % shiftMatrixStart = zeros(rDim,zDim);
 % plateauPoints = [1,round((zDim+1)/2)];
 % shiftMatrixStart(1,round((zDim+1)/2)) = goalHeight;
@@ -292,11 +294,10 @@ for rounds = 1:maxIter
     end
     
     % Save RunData every round
-    save(strcat("RunData-",num2str(rounds)),"RunData")
+    save(strcat("RunData-",num2str(rounds),"-",num2str(depth),'z','-',num2str(innerR),'r','-',num2str(goalHeight),'v'),"RunData")
     
 end
 
 drawWarpFieldPW(shiftMatrix)
-
 
 
