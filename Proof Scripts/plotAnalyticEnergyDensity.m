@@ -10,6 +10,7 @@ gridSize = 41;
 xx = linspace(-100,100,gridSize);
 yy = linspace(-100,100,gridSize);
 zz = linspace(-100,100,gridSize);
+zz = 0;
 
 R = 50;
 sig = 0.1;

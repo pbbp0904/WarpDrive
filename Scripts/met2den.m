@@ -8,7 +8,7 @@ function [energyDensity] = met2den(metricTensor)
 %   double type
 %
 %
-%   OUPUT: 4x4 cell array. Elements of cell array are 4-D metricies of
+%   OUPUT: 4x4 cell array. Elements of cell array are 4-D matricies of
 %   double type
 
 
@@ -20,7 +20,7 @@ gu = c4Inv(gl);
 % Calculate the Christoffel symbols
 %tic
 %fprintf('Calculating Christoffel Symbols...\n')
-G = christoffelS(gu, gl);
+%G = christoffelS(gu, gl);
 %toc
 
 
@@ -28,7 +28,7 @@ G = christoffelS(gu, gl);
 
 %tic
 % Calculate the Ricci tensor
-R_munu = ricciT(G,gu);
+R_munu = ricciT2(gu,gl);
 
 % Calculate the Ricci scalar
 R = ricciS(R_munu,gu);

@@ -1,0 +1,13 @@
+-(sig^2*vs^2*tanh(sig*rs)^2*(y^2 + z^2)*(tanh(sig*rs)^2 - 1)^2*(tanh(R*sig)^2 - 1)^2)/((tanh(sig*rs)^2*tanh(R*sig)^2 - 1)^4*rs^2)
+
+
+--------------------------------
+
+
+
+
+-sig^2 * vs^2 * (y^2 + z^2) / rs^2 * (tanh(sig*rs)^2*(tanh(sig*rs)^2 - 1)^2*(tanh(R*sig)^2 - 1)^2)/((tanh(sig*rs)^2*tanh(R*sig)^2 - 1)^4)
+
+
+
+

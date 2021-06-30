@@ -1,35 +1,95 @@
-function [R_munu] = ricciT2(G,gu)
+function [R_munu] = ricciT2(gu,gl)
 %RICCI calculates the Ricci tensor for a given christoffel symbols
 
-[t,x,y,z] = size(gu{1,1});
-skipTdiff = 0;
-if t == 1
-   skipTdiff = 1; 
-end
 
+[t,x,y,z] = size(gl{1,1});
 
-for mu = 1:4
-    for nu = 1:4
-        R_munu{mu,nu} = 0; %#ok<AGROW>
-        for rho = 1:4
-            
-            if ~(skipTdiff && rho == 1)
-                [gt, gx, gy, gz] = gradient(G{rho,mu,nu});
-                g = {gt, gx, gy, gz};
-                R_munu{mu,nu} = R_munu{mu,nu} + g{rho};
-            end
-            if ~(skipTdiff && nu == 1)
-                [gt, gx, gy, gz] = gradient(G{rho,mu,rho});
-                g = {gt, gx, gy, gz};
-                R_munu{mu,nu} = R_munu{mu,nu} - g{nu};
-            end
-            
-            for lambda = 1:4
-                R_munu{mu,nu} = R_munu{mu,nu} + G{rho,lambda,rho}.*G{lambda,mu,nu} - G{rho,lambda,nu}.*G{lambda,mu,rho};
+% Ricci tensor
+R_munu = cell(4,4);
+
+for i = 0:3
+    for j = 0:3
+        
+        R_munu{i+1,j+1} = 0;
+        
+        % First term
+        term1 = zeros(t,x,y,z);
+        for a = 0:3
+            for b = 0:3
+                if t > 2 || (a~=0 && b~=0)
+                    term1 = term1 + 1/2 .* ( padDiff(diff(padDiff(diff(gl{i+1,j+1},1,(a+1)),(a+1)),1,(b+1)),(b+1)) ) .* gu{a+1,b+1};
+                end
+                if t > 2 || (i~=0 && j~=0)
+                    term1 = term1 + 1/2 .* ( padDiff(diff(padDiff(diff(gl{a+1,b+1},1,(i+1)),(i+1)),1,(j+1)),(j+1)) ) .* gu{a+1,b+1};
+                end
+                if t > 2 || (j~=0 && a~=0)
+                    term1 = term1 + 1/2 .* (-padDiff(diff(padDiff(diff(gl{i+1,b+1},1,(j+1)),(j+1)),1,(a+1)),(a+1)) ) .* gu{a+1,b+1};
+                end
+                if t > 2 || (i~=0 && a~=0)
+                    term1 = term1 + 1/2 .* (-padDiff(diff(padDiff(diff(gl{j+1,b+1},1,(i+1)),(i+1)),1,(a+1)),(a+1)) ) .* gu{a+1,b+1};
+                end
             end
         end
+        
+        R_munu{i+1,j+1} = R_munu{i+1,j+1} + term1;
+
+        % Second term
+        term2 = zeros(t,x,y,z);
+        for a = 0:3
+            for b = 0:3
+                for c = 0:3
+                    for d = 0:3
+                        if t > 2 || (i~=0 && j~=0)
+                            term2 = term2 + 1/2 .* ( 1/2.*padDiff(diff(gl{a+1,c+1},1,(i+1)),(i+1)).*padDiff(diff(gl{b+1,d+1},1,(j+1)),(j+1)) ) .* gu{a+1,b+1} .* gu{c+1,d+1};
+                        end
+                        if t > 2 || (a~=0 && b~=0)
+                            term2 = term2 + 1/2 .* (      padDiff(diff(gl{i+1,c+1},1,(a+1)),(a+1)).*padDiff(diff(gl{j+1,d+1},1,(b+1)),(b+1)) ) .* gu{a+1,b+1} .* gu{c+1,d+1};
+                        end
+                        if t > 2 || (a~=0 && d~=0)
+                            term2 = term2 + 1/2 .* (    - padDiff(diff(gl{i+1,c+1},1,(a+1)),(a+1)).*padDiff(diff(gl{j+1,b+1},1,(d+1)),(d+1)) ) .* gu{a+1,b+1} .* gu{c+1,d+1};
+                        end
+                    end
+                end
+            end
+        end
+        
+        R_munu{i+1,j+1} = R_munu{i+1,j+1} + term2;
+
+        % Third Term
+        term3 = zeros(t,x,y,z);
+        for a = 0:3
+            for b = 0:3
+                for c = 0:3
+                    for d = 0:3
+                        if t > 2 || (i~=0 && a~=0)
+                            term3 = term3 - 1/4 .* ( padDiff(diff(gl{j+1,c+1},1,(i+1)),(i+1)) ) .* ( 2.*padDiff(diff(gl{b+1,d+1},1,(a+1)),(a+1)) ) .* gu{a+1,b+1} .* gu{c+1,d+1};
+                        end
+                        if t > 2 || (j~=0 && a~=0)
+                            term3 = term3 - 1/4 .* ( padDiff(diff(gl{i+1,c+1},1,(j+1)),(j+1)) ) .* ( 2.*padDiff(diff(gl{b+1,d+1},1,(a+1)),(a+1)) ) .* gu{a+1,b+1} .* gu{c+1,d+1};
+                        end
+                        if t > 2 || (c~=0 && a~=0)
+                            term3 = term3 - 1/4 .* (-padDiff(diff(gl{i+1,j+1},1,(c+1)),(c+1)) ) .* ( 2.*padDiff(diff(gl{b+1,d+1},1,(a+1)),(a+1)) ) .* gu{a+1,b+1} .* gu{c+1,d+1};
+                        end
+                        if t > 2 || (i~=0 && d~=0)
+                            term3 = term3 - 1/4 .* ( padDiff(diff(gl{j+1,c+1},1,(i+1)),(i+1)) ) .* (  - padDiff(diff(gl{a+1,b+1},1,(d+1)),(d+1)) ) .* gu{a+1,b+1} .* gu{c+1,d+1};
+                        end
+                        if t > 2 || (j~=0 && d~=0)
+                            term3 = term3 - 1/4 .* ( padDiff(diff(gl{i+1,c+1},1,(j+1)),(j+1)) ) .* (  - padDiff(diff(gl{a+1,b+1},1,(d+1)),(d+1)) ) .* gu{a+1,b+1} .* gu{c+1,d+1};
+                        end
+                        if t > 2 || (c~=0 && d~=0)
+                            term3 = term3 - 1/4 .* (-padDiff(diff(gl{i+1,j+1},1,(c+1)),(c+1)) ) .* (  - padDiff(diff(gl{a+1,b+1},1,(d+1)),(d+1)) ) .* gu{a+1,b+1} .* gu{c+1,d+1};
+                        end
+                    end
+                end
+            end
+        end
+        
+        R_munu{i+1,j+1} = R_munu{i+1,j+1} + term3;
+        
     end
 end
+
+
 
 end
 
