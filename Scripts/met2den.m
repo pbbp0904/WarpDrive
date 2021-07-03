@@ -28,7 +28,7 @@ gu = c4Inv(gl);
 
 %tic
 % Calculate the Ricci tensor
-R_munu = ricciT2(gu,gl);
+R_munu = ricciT6(gu,gl);
 
 % Calculate the Ricci scalar
 R = ricciS(R_munu,gu);

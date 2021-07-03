@@ -33,9 +33,9 @@ SM{4,1} = zeros(1,maxGrid,maxGrid,maxGrid);
 for i = X
     for j = Y
         for k = Z
-            x = i-(maxGrid-1)/2;
-            y = j-(maxGrid-1)/2;
-            z = k-(maxGrid-1)/2;
+            x = i-(maxGrid+1)/2;
+            y = j-(maxGrid+1)/2;
+            z = k-(maxGrid+1)/2;
             
             % Diagonal terms
             SM{1,1}(1,i,j,k) = rs/(x^2 + y^2 + z^2)^(1/2) - 1;

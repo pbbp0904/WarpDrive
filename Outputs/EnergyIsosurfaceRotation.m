@@ -1,11 +1,11 @@
-load('C:\Users\chris\Documents\MATLAB\WarpDrive\ML\AdaptiveSearch\New Runs\RunData-13-POINT-v2.mat')
+%load('C:\Users\chris\Documents\MATLAB\WarpDrive\ML\AdaptiveSearch\New Runs\RunData-13-POINT-v2.mat')
 
 % Generate data
 tryGPU = 1;
 padding = 3;
 A = RunData.shiftMatricies{end};
 metric = makeMetricPW(A, padding);
-energyDensities = calcEnDenPW(metric,tryGPU);
+%energyDensities = calcEnDenPW(metric,tryGPU);
 [energyPos, energyNeg] = calcTotalEnergyPW(energyDensities);
 totalEnergy = abs(energyPos) + abs(energyNeg);
 energyDensity = squeeze(energyDensities{1,1});
@@ -54,7 +54,7 @@ for i = 1:numberOfFrames
     
     % Change view
     set(gca,'DataAspectRatio',[1 1 1]);
-    view(i*rotationAmount/numberOfFrames,20);
+    view(30+i*rotationAmount/numberOfFrames,20);
     
     % Set style
     s.Format = 'png';

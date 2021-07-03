@@ -1,0 +1,28 @@
+function [R_munu] = ricciT3(G,gu)
+%RICCI calculates the Ricci tensor for a given christoffel symbols
+
+[t,x,y,z] = size(gu{1,1});
+s = [t,x,y,z];
+
+R_munu = cell(4,4);
+for i = 1:4
+    for j = 1:4
+        R_munu{i,j} = zeros(t,x,y,z); 
+        for rho = 1:4
+            
+            if s(rho)>=3
+                R_munu{i,j} = R_munu{i,j} + padDiff(diff(G{rho,j,i},1,rho),rho);
+            end
+            if s(j)>=3
+                R_munu{i,j} = R_munu{i,j} - padDiff(diff(G{rho,rho,i},1,j),j);
+            end
+            
+            for lambda = 1:4
+                R_munu{i,j} = R_munu{i,j} + G{rho,rho,lambda}.*G{lambda,j,i} - G{rho,j,lambda}.*G{lambda,rho,i};
+            end
+        end
+    end
+end
+
+end
+

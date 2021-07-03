@@ -8,7 +8,7 @@ R = R_input/spatialResolution;
 gridSize = spatialExtent./spatialResolution;
 
 sig = linspace(0.1,1,10);
-vs = 100;
+vs = 0.001;
 
 
 %% Run through sigmas
@@ -61,7 +61,7 @@ plot(sig,-abs(energiesNumerical2(:,1,1)))
 set(gca,'Yscale','log')
 xlabel('\sigma')
 ylabel('Energy [J]')
-legend('Numerical 1','Numerical 2')
+legend('Numerical 1')
 title('Numerical Approach')
 
 subplot(1,3,2)
@@ -80,7 +80,7 @@ set(gca,'Yscale','log')
 xlabel('\sigma')
 ylabel('Energy [J]')
 title('Result Comparison')
-legend('Numerical 1','Analytical')
+legend('Numerical','Analytical')
 box on
 set(gcf,'color','w');
 sgtitle(['Alcubierre Metric: R = ' num2str(R_input) ', v_s = ' num2str(vs) ', \sigma = \{' num2str(min(sig)) ', ' num2str(max(sig)) '\}, World Size = ' num2str(WorldSize) ', Res = ' num2str(spatialResolution)])

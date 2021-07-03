@@ -13,7 +13,7 @@ filename = 'testAnimated.gif';
 
 iMod = 20; % Draw every iMod changes
 gifLength = 10; % seconds
-rotationAmount = 90; % Total degrees of rotation in the gif
+rotationAmount = 0; % Total degrees of rotation in the gif
 
 for i = 1:iMod:length(RunData.shiftMatricies)
     
@@ -28,7 +28,7 @@ for i = 1:iMod:length(RunData.shiftMatricies)
     
     % Set limits
     xlim([1 64])
-    ylim([1 100])
+    ylim([1 128])
     zlim([1.02*min(B,[],'all'), 1.02*max(B,[],'all')])
     
     % Set labels
@@ -40,8 +40,8 @@ for i = 1:iMod:length(RunData.shiftMatricies)
     colormap(turbo);
     
     % Change view
-    set(gca,'DataAspectRatio',[20 20 1]);
-    view(i*rotationAmount/length(RunData.shiftMatricies),20);
+    set(gca,'DataAspectRatio',[10 10 1]);
+    view(30+i*rotationAmount/length(RunData.shiftMatricies),20);
     
     % Set style
     s.Format = 'png';
