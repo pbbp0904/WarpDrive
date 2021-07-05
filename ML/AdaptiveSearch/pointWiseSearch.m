@@ -1,6 +1,6 @@
 %%%% Starting Params
 % Z Dimension Size
-zDim = 64;
+zDim = 32;
 % R Dimension Size
 rDim = 64;
 % Plateau Radius
@@ -24,7 +24,7 @@ maxLoop = 1000000000;
 maxIter = 6;
 
 % Starting magnitude of adjustment scalar
-initialAdjustmentScalar = goalHeight/10;
+initialAdjustmentScalar = -goalHeight/10;
 % Randomness in adjustment scalar value
 randomAd = 0;
 

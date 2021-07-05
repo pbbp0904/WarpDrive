@@ -1,9 +1,10 @@
 spatialResolution = 1;
-WorldSize = 134;
+WorldSize = 140;
 spatialExtent = [WorldSize,WorldSize,WorldSize];
 R_input = 2;
 R = R_input/spatialResolution;
 gridSize = spatialExtent./spatialResolution;
+c = 2.99792*10^8;
 
 sig = 1.5;
 vs = 3;
@@ -13,7 +14,7 @@ energies = [];
 energiesPos = [];
 
 % shiftMatricies = makeAlcubierreShiftMatrixPW(round(gridSize(1)/2),gridSize(3),R,vs,sig);
-% AM2 = makeMetricPW(shiftMatricies, 3);
+%AM2 = makeMetricPW(RunData.shiftMatricies{end}, 3);
 % AM = metricGPUGet_Alcubierre(0,vs,R,sig,gridSize);
 
 % Z = met2den(AM);
@@ -29,7 +30,7 @@ Ylims = [1 3 5 7 9];
 Zcuts = 5;
 gridres = 6;
 Metric = AM2;
-scale = 4;
+scale = 1;
 
 % mom_streamline_plot_sqrgrid_animated(AM2,spatialExtent,1,'test',Zcuts,gridres,Xlims,Ylims,1)
 
@@ -37,20 +38,24 @@ scale = 4;
 Energy = StressEnergyTensor{1,1};
 Energy = squeeze(Energy)*spatialRes^2;
 
-MomX = StressEnergyTensor{1,2};
+MomX = -StressEnergyTensor{1,2}./StressEnergyTensor{1,1};
+MomX = c*MomX./(sqrt(c^2+MomX.^2));
 MomX = permute(squeeze(MomX),[2,1,3]);
 %MomX = MomX.*sign(Energy);
 
-MomY = StressEnergyTensor{1,3};
+MomY = -StressEnergyTensor{1,3}./StressEnergyTensor{1,1};
 MomY = permute(squeeze(MomY),[2,1,3]);
+MomY = c*MomY./(sqrt(c^2+MomY.^2));
 %MomY = MomY.*sign(Energy);
 
-MomZ = StressEnergyTensor{1,4};
+MomZ = -StressEnergyTensor{1,4}./StressEnergyTensor{1,1};
 MomZ = permute(squeeze(MomZ),[2,1,3]);
+MomZ = c*MomZ./(sqrt(c^2+MomZ.^2));
 %MomZ = MomZ.*sign(Energy);
 
 
 MagMom = (MomX.^2+MomY.^2+MomZ.^2).^0.5;
+MagMom = 1;
 MomX = MomX./MagMom*scale;
 MomY = MomY./MagMom*scale;
 MomZ = MomZ./MagMom*scale;
@@ -58,6 +63,9 @@ MomZ = MomZ./MagMom*scale;
 MomX(isnan(MomX)) = 0;
 MomY(isnan(MomY)) = 0;
 MomZ(isnan(MomZ)) = 0;
+MomX(isinf(MomX)) = 0;
+MomY(isinf(MomY)) = 0;
+MomZ(isinf(MomZ)) = 0;
 
 X = linspace(0,WorldSize,size(Energy,1));
 Y = linspace(0,WorldSize,size(Energy,2));
@@ -78,15 +86,15 @@ hold on
 % [Xstart,Ystart,Zstart] = meshgrid(Xpoints,Ypoints,Zpoints);
 
 rSize = 25;
-pSize = 4;
+pSize = 2;
 Rpoints = linspace(0,WorldSize/2,rSize);
-Ppoints = linspace(0,4*pi*(1-1/pSize),pSize);
+Ppoints = linspace(0,2*pi*(1-1/pSize),pSize);
 [r, th] = meshgrid(Rpoints,Ppoints);
 Xstart = r.*cos(th)+WorldSize/2;
 Ystart = r.*sin(th)+WorldSize/2;
 %Zstart = cat(1,32.*ones(pSize/2, rSize),38.*ones(pSize/2, rSize));
-Zstart = cat(1,16.*ones(pSize/2, rSize),54.*ones(pSize/2, rSize));
-% Zstart = 35.*ones(pSize, rSize);
+%Zstart = cat(1,16.*ones(pSize/2, rSize),54.*ones(pSize/2, rSize));
+Zstart = 35.*ones(pSize, rSize);
 
 verts = stream3(x,y,z,MomX,MomY,MomZ,Xstart,Ystart,Zstart); 
 
@@ -134,8 +142,8 @@ end
     %view(30+j*rotationAmount/numberOfFrames,20);
     view(0,0)
 
-     xlim([0,WorldSize])
-     ylim([0,WorldSize])
+     xlim([20,120])
+     ylim([20,120])
      zlim([10,60])
 %     xlim([93,120])
 %     ylim([0,WorldSize])
