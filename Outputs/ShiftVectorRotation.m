@@ -1,4 +1,4 @@
-%load('C:\Users\chris\Documents\MATLAB\WarpDrive\ML\AdaptiveSearch\UFO\z30_r60_b10_UFO.mat')
+load('C:\Users\chris\Documents\MATLAB\WarpDrive\ML\AdaptiveSearch\New Runs\Cylinders\RunData-6-36z-10r-2v.mat')
 
 A = RunData.shiftMatricies{end};
 B = cat(1,flipud(A),A);
@@ -18,7 +18,7 @@ rotationAmount = 0; % Total degrees of rotation in the gif
 for i = 1:iMod:length(RunData.shiftMatricies)
     
     A = RunData.shiftMatricies{i};
-    B = cat(1,flipud(A),A);
+    B = abs(cat(1,flipud(A),A));
     
     % Radial Trim
     %B = B(10:110,:);
@@ -40,8 +40,8 @@ for i = 1:iMod:length(RunData.shiftMatricies)
     colormap(turbo);
     
     % Change view
-    set(gca,'DataAspectRatio',[10 10 1]);
-    view(30+i*rotationAmount/length(RunData.shiftMatricies),20);
+    set(gca,'DataAspectRatio',[12 12 1]);
+    view(-45+i*rotationAmount/length(RunData.shiftMatricies),20);
     
     % Set style
     s.Format = 'png';
@@ -60,4 +60,4 @@ for i = 1:iMod:length(RunData.shiftMatricies)
     end 
 end
 
-imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',2);
+imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',20);
