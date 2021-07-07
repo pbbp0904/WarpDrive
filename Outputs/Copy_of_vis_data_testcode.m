@@ -88,8 +88,8 @@ hold on
 % rSize = 4;
 % pSize = 32;
 
-rSize = 48;
-pSize = 4;
+rSize = 2;
+pSize = 20;
 
 Rpoints = linspace(WorldSize/3.9,WorldSize/3,rSize);
 Ppoints = linspace(0,4*pi*(1-1/pSize),pSize);
@@ -151,30 +151,31 @@ for j = 1:5:5*numberOfFrames
     %title(sprintf("Net Energy: %1.2e",RunData.totalPosEnergies{i}-RunData.totalNegEnergies{i}))
     title('Cylinder Passenger Area Energy Flow')
     colormap(turbo);
-    
+
     % Change view
     set(gca,'DataAspectRatio',[1 1 1]);
-    view(0,0)
+    view(45,45)
+        drawnow
 %     view(30,20)
 
     % Set style
-    s.Format = 'png';
-    hgexport(h,'temp_dummy',s,'applystyle', true);
-    
-    % Capture the plot as image
-    frame = getframe(h); 
-    im = frame2im(frame); 
-    [imind,cm] = rgb2ind(im,256); 
-    
-	% Write to the GIF file 
-    if j == 1 
-        imwrite(imind,cm,filename,'gif', 'Loopcount',inf,'DelayTime',frameDuration); 
-    else 
-        imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',frameDuration); 
-    end
-    if j == 166
-        pause
-    end
+%     s.Format = 'png';
+%     hgexport(h,'temp_dummy',s,'applystyle', true);
+%     
+%     % Capture the plot as image
+%     frame = getframe(h); 
+%     im = frame2im(frame); 
+%     [imind,cm] = rgb2ind(im,256); 
+%     
+% 	% Write to the GIF file 
+%     if j == 1 
+%         imwrite(imind,cm,filename,'gif', 'Loopcount',inf,'DelayTime',frameDuration); 
+%     else 
+%         imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',frameDuration); 
+%     end
+%     if j == 166
+%         pause
+%     end
 end
 % 
 % imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',frameDuration);
