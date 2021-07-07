@@ -82,9 +82,7 @@ xlabel('X [m]')
 ylabel('Y [m]')
 zlabel('Z [m]')
 title('T_{00} Energy Density')
-xlim(xlimits)
-ylim(ylimits)
-zlim(zlimits)
+
 
 fig = subplot(1,2,2);
 beta = squeeze(Metric{1,4});
