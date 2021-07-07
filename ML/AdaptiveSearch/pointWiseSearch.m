@@ -1,12 +1,12 @@
 %%%% Starting Params
 % Z Dimension Size
-zDim = 64;
+zDim = 32;
 % R Dimension Size
 rDim = 64;
 % Plateau Radius
-innerR = 10;
+innerR = 30;
 % Plateau depth
-depth = 36;
+depth = 4;
 % Plateau Scale
 sizeScale = 2;
 %Plateau donut offset from axis
@@ -21,10 +21,10 @@ zSym = 0;
 % Max passes for one adjustment scalar
 maxLoop = 1000000000;
 % Max number of decreases of adjustment scalar
-maxIter = 11;
+maxIter = 6;
 
 % Starting magnitude of adjustment scalar
-initialAdjustmentScalar = goalHeight/10;
+initialAdjustmentScalar = -goalHeight/10;
 % Randomness in adjustment scalar value
 randomAd = 0;
 
@@ -41,7 +41,7 @@ sliceDistance = 5;
 % Makes the initial shift matrix with the plateau
 % also computes the points inside the plateau that the interation should ignore
 
-%[shiftMatrixStart, plateauPoints] = makeAlcubierreShiftMatrixPW(rDim,zDim,innerR,goalHeight,0.5);
+%[shiftMatrixStart, plateauPoints] = makeAlcubierreShiftMatrixPW(rDim,zDim,innerR,goalHeight,0.3);
 %[shiftMatrixStart, plateauPoints] = makeExponentialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
 %shiftMatrixStart = round(shiftMatrixStart,1);
 %[shiftMatrixStart, plateauPoints] = makeInitialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
@@ -294,7 +294,7 @@ for rounds = 1:maxIter
     end
     
     % Save RunData every round
-    save(strcat("RunData-",num2str(rounds),"-",num2str(depth),'z','-',num2str(innerR),'r','-',num2str(goalHeight),'v'),"RunData")
+    save(strcat("RunData-",num2str(rounds),"-",num2str(depth),'z','-',num2str(innerR),'r','-',num2str(goalHeight),'v.mat'),"RunData")
     
 end
 

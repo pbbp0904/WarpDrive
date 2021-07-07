@@ -1,4 +1,4 @@
-load('C:\Users\chris\Documents\MATLAB\WarpDrive\ML\AdaptiveSearch\New Runs\RunData-13-POINT-v2.mat')
+load('C:\Users\chris\Documents\MATLAB\WarpDrive\ML\AdaptiveSearch\New Runs\Cylinders\RunData-6-4z-30r-2v.mat')
 
 % Generate data
 tryGPU = 1;
@@ -17,14 +17,14 @@ s=hgexport('readstyle',styleName);
 filename = 'testAnimated.gif';
 
 
-rotationAmount = 90; % Total degrees of rotation in the gif
+rotationAmount = 45; % Total degrees of rotation in the gif
 numberOfFrames = 24*10; % Total number of frames
 frameDuration = 1/24; % Length of a single frame in seconds
 logValue = 0.7;
 
 maxAbs = max(abs(energyDensity),[],'all');
 
-isovalues = cat(2,fliplr(-2.^(log2(maxAbs)*logValue:(1-logValue)*log2(maxAbs)/(numberOfFrames/2):log2(maxAbs))),2.^(log2(maxAbs)*logValue:(1-logValue)*log2(maxAbs)/(numberOfFrames/2):log2(maxAbs)));
+isovalues = fliplr(-2.^(log2(maxAbs)*logValue:(1-logValue)*log2(maxAbs)/(numberOfFrames):log2(maxAbs)));
    
 for i = 1:numberOfFrames
     
@@ -41,20 +41,20 @@ for i = 1:numberOfFrames
     
     % Set limits
     denSize = size(energyDensity);
-    xlim([1 denSize(1)])
-    ylim([1 denSize(2)])
+    xlim([1 denSize(2)])
+    ylim([1 denSize(1)])
     zlim([1 denSize(3)])
     
     % Set labels
-    xlabel('X')
-    ylabel('Y')
+    xlabel('Y')
+    ylabel('X')
     zlabel('Z')
     title(sprintf("Energy Density Value: %1.2e",isovalues(i)))
     %colormap(turbo);
     
     % Change view
     set(gca,'DataAspectRatio',[1 1 1]);
-    view(i*rotationAmount/numberOfFrames,20);
+    view(30+i*rotationAmount/numberOfFrames,20);
     
     % Set style
     s.Format = 'png';
