@@ -1,4 +1,6 @@
-load('C:\Users\j90xb\Desktop\WarpDrive_Project\ML\AdaptiveSearch\New Runs\Cylinders\RunData-6-4z-30r-2v.mat')
+load('C:\Users\j90xb\Desktop\WarpDrive_Project\ML\AdaptiveSearch\New Runs\Cylinders\RunData-6-36z-10r-2v.mat')
+ShiftMatrix = makealcubierreshiftmatrix(64,64,14,2,0.3)
+
 AM2 = makeMetricPW(RunData.shiftMatricies{end}, 3);
 StressEnergyTensor = met2den(AM2);
 
@@ -154,13 +156,13 @@ view(az,el)
 xlabel('X [m]')
 ylabel('Y [m]')
 zlabel('Z [m]')
-title('T^{00} Energy Density - Spherical')
-    xlim([134/4-1,134/2])
-    ylim([134/4-1,134/2])
-    zlim([70/2,55])
+title('T^{00} Energy Density - Cylinder (36Z)')
+    xlim([30,134/2])
+    ylim([30,134/2])
+    zlim([70/2,60])
 
 % set(gca, 'ColorScale', 'log')
-caxis([0 8*10^40])
+caxis([0 5*10^40])
 % setting background to white and make global title
 set(gcf,'color','w');
 
