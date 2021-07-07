@@ -9,7 +9,7 @@ innerR = 15;
 depth = 16;
 % Plateau Scale
 sizeScale = 2;
-%Plateau donut offset from axis
+% Plateau donut offset from axis
 offset = 20;
 % Plateau Height, This is equivilent to the apparent warp velocity
 goalHeight = 1;

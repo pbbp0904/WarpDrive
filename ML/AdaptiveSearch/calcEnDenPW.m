@@ -14,7 +14,7 @@ else
 end
 
 if useGPU
-    gpuDevice(1);
+    %gpuDevice(1);
     metricGPU = {};
     for i = 1:4
         for j = 1:4
