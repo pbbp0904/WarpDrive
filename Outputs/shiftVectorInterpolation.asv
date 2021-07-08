@@ -1,0 +1,21 @@
+load('C:\Users\chris\Documents\MATLAB\WarpDrive\ML\AdaptiveSearch\New Runs\Spheres\RunData-6-14z-14r-2v.mat')
+RunDataA = RunData;
+shiftMatrixA = RunDataA.shiftMatricies{end};
+
+load('C:\Users\chris\Documents\MATLAB\WarpDrive\ML\AdaptiveSearch\New Runs\Spheres\RunData-6-0z-14r-2v.mat')
+RunDataB = RunData;
+shiftMatrixB = RunDataB.shiftMatricies{end};
+
+
+%%
+imax = 10;
+irange = 0:10;
+for i = irange
+    shiftMatrix = (1-i/imax) .* shiftMatrixA + i/imax .* shiftMatrixB;
+    metric = makeMetricPW(shiftmatrix,3);
+    Z = met2den(metric);
+    enDen(i+1) = 
+    
+end
+
+

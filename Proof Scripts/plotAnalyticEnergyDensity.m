@@ -5,7 +5,7 @@ enDenSym = T{1,1};
 
 %enDenSym = x^2*((4*sig*tanh(rs*sig)*vs^2*(tanh(rs*sig)^2 - 1)^2*(tanh(R*sig)^2 - 1))/(rs^3*(tanh(rs*sig)^2*tanh(R*sig)^2 - 1)^3)) + (y^2 + z^2)*((2*sig*tanh(rs*sig)*vs^2*(tanh(rs*sig)^2 - 1)^2*(tanh(R*sig)^2 - 1))/(rs^3*(tanh(rs*sig)^2*tanh(R*sig)^2 - 1)^3) * (1 - (sig*rs/(2*tanh(rs*sig))*(5*tanh(rs*sig)*(tanh(rs*sig)^2 - 1)^2*(tanh(R*sig)^2 - 1)*vs^2 - (tanh(rs*sig)^2*tanh(R*sig)^2 - 1)^2*(tanh(rs*sig)^2*((2*tanh(rs*sig)^2 - 5)*tanh(R*sig)^2 + 5) - 2))/(tanh(rs*sig)^2*tanh(R*sig)^2 - 1)^3)));
 %enDenSym = -1/(8*pi)*vs/4*(y.^2+z.^2)./(x.^2+y.^2+z.^2).*(-1/2*sig*tanh(sig*R)*(sech(sig*((x.^2+y.^2+z.^2).^0.5-R)).^2-sech(sig*((x.^2+y.^2+z.^2).^0.5+R)).^2)).^2;
-gridSize = 41;
+gridSize = 21;
 
 xx = linspace(-100,100,gridSize);
 yy = linspace(-100,100,gridSize);

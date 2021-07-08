@@ -4,15 +4,15 @@ zDim = 64;
 % R Dimension Size
 rDim = 64;
 % Plateau Radius
-innerR = 15;
+innerR = 14;
 % Plateau depth
-depth = 16;
+depth = 28;
 % Plateau Scale
 sizeScale = 2;
 %Plateau donut offset from axis
 offset = 20;
 % Plateau Height, This is equivilent to the apparent warp velocity
-goalHeight = 1;
+goalHeight = 2;
 % XYZ Padding
 padding = 3;
 % Z Symmetry
@@ -41,8 +41,8 @@ sliceDistance = 5;
 
 %[shiftMatrixStart, plateauPoints] = makeExponentialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
 %shiftMatrixStart = round(shiftMatrixStart,1);
-%[shiftMatrixStart, plateauPoints] = makeInitialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
-[shiftMatrixStart, plateauPoints] = makeCylindricalShiftMatrixPW(rDim,zDim,innerR,depth,goalHeight);
+[shiftMatrixStart, plateauPoints] = makeInitialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
+%[shiftMatrixStart, plateauPoints] = makeCylindricalShiftMatrixPW(rDim,zDim,innerR,depth,goalHeight);
 %[shiftMatrixStart, plateauPoints] = makeDonutShiftMatrixPW(rDim,zDim,innerR,depth,offset,goalHeight);
 %[shiftMatrixStart, plateauPoints] = makeStreamlineShiftMatrixPW(rDim,zDim,sizeScale,goalHeight);
 
