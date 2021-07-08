@@ -1,5 +1,5 @@
-load('C:\Users\j90xb\Desktop\WarpDrive_Project\ML\AdaptiveSearch\New Runs\Spheres\RunData-6-14z-14r-2v.mat')
-AM2 = makeMetricPW(RunData.shiftMatricies{1}, 3);
+load('C:\Users\j90xb\Desktop\WarpDrive_Project\ML\AdaptiveSearch\New Runs\Cylinders\RunData-6-36z-10r-2v.mat')
+AM2 = makeMetricPW(RunData.shiftMatricies{end}, 3);
 StressEnergyTensor = met2den(AM2);
 
 
@@ -93,15 +93,15 @@ hold on
 % rSize = 4;
 % pSize = 32;
 
-rSize = 40;
+rSize = 10;
 pSize = 4;
 
-Rpoints = linspace(WorldSize/500,WorldSize/3,rSize);
+Rpoints = linspace(0,WorldSize/3,rSize);
 Ppoints = linspace(0,4*pi*(1-1/pSize),pSize);
 [r, th] = meshgrid(Rpoints,Ppoints);
 Xstart = r.*cos(th)+WorldSize/2;
 Ystart = r.*sin(th)+WorldSize/2;
-Zstart = cat(1,(70/2-2).*ones(pSize/2, rSize),(70/2+2).*ones(pSize/2, rSize));
+Zstart = cat(1,(70/2).*ones(pSize/2, rSize),(70/2).*ones(pSize/2, rSize));
 %Zstart = cat(1,16.*ones(pSize/2, rSize),54.*ones(pSize/2, rSize));
 %Zstart = 67.*ones(pSize, rSize);
 
@@ -148,7 +148,7 @@ filename = 'testAnimated.gif';
     % Set limits
     xlim([1,134])
     ylim([1,134])
-    zlim([70/2-20,70/2+20])
+    zlim([70/2-40,70/2+40])
     
     % Set labels
     xlabel('Y')

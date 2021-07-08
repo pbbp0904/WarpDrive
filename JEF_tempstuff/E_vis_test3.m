@@ -1,5 +1,7 @@
 load('C:\Users\j90xb\Desktop\WarpDrive_Project\ML\AdaptiveSearch\New Runs\Cylinders\RunData-6-36z-10r-2v.mat')
-AM2 = makeMetricPW(RunData.shiftMatricies{end}, 3);
+ShiftMatrix = makeAlcubierreShiftMatrixPW(64,64,14,2,0.3);
+
+AM2 = makeMetricPW(ShiftMatrix , 3);
 StressEnergyTensor = met2den(AM2);
 
 
@@ -113,8 +115,9 @@ yy=get(sl,'YData');
 zz=get(sl,'ZData');
 
 %% Test Code
-load('Outputs\WarpDriveStyle.mat')
+
 %% Plotting energy contours
+load('Outputs\WarpDriveStyle.mat')
 hh = figure();
 clf
 
@@ -154,13 +157,13 @@ view(az,el)
 xlabel('X [m]')
 ylabel('Y [m]')
 zlabel('Z [m]')
-title('T^{00} Energy Density - Cylinder (36Z)')
-    xlim([30,134/2])
-    ylim([30,134/2])
+title('T^{00} Energy Density - Alcubierre')
+    xlim([40,134/2])
+    ylim([40,134/2])
     zlim([70/2,60])
 
 % set(gca, 'ColorScale', 'log')
-caxis([0 5*10^40])
+% caxis([0 2*10^41])
 % setting background to white and make global title
 set(gcf,'color','w');
 
