@@ -1,4 +1,4 @@
-function [SM] = metricGet_Schwarszchild(radius,maxGrid)
+function [SM] = metricGet_Schwarzschild(radius,maxGrid)
 
 % dtdt        = rs/(x^2 + y^2 + z^2)^(1/2) - 1
 % dxdx        = 1 - (rs*x^2)/((rs - (x^2 + y^2 + z^2)^(1/2))*(x^2 + y^2 + z^2))

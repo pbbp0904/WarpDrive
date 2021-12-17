@@ -45,9 +45,9 @@ for i = 1:maxGrid(1)
     for j = 1:maxGrid(2)
         for k = 1:maxGrid(3)
             
-            x = i-(maxGrid(1)-1)/2;
-            y = j-(maxGrid(2)-1)/2;
-            z = k-(maxGrid(3)-1)/2;
+            x = i-(maxGrid(1)+1)/2;
+            y = j-(maxGrid(2)+1)/2;
+            z = k-(maxGrid(3)+1)/2;
             
             % dt^2 term
             AM{1,1}(1,i,j,k) = -(1-(vs^2*(tanh(sigma*(R + ((x - xs)^2 + y^2 + z^2)^(1/2))) + tanh(sigma*(R - ((x - xs)^2 + y^2 + z^2)^(1/2))))^2)/(4*tanh(R*sigma)^2));

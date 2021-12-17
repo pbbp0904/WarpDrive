@@ -1,6 +1,8 @@
 function [R_munu] = ricciT7(G,gu)
 %RICCI calculates the Ricci tensor for a given christoffel symbols
 
+
+% Form from substituting from Hartle, same as T9
 [t,x,y,z] = size(gu{1,1});
 s = [t,x,y,z];
 

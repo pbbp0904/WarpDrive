@@ -17,31 +17,26 @@ function [energyDensity] = met2den(metricTensor)
 gl = metricTensor;
 gu = c4Inv(gl);
 
-% Calculate the Christoffel symbols
-%tic
-%fprintf('Calculating Christoffel Symbols...\n')
-%G = christoffelS(gu, gl);
-%toc
 
-
-%fprintf('Calculating Stress-Energy Tensor...\n')
-
-%tic
 % Calculate the Ricci tensor
-R_munu = ricciT6(gu,gl);
+R_munu = ricciT(gu,gl);
+
+% Alternative Method to Calculate the Ricci tensor
+% G = christoffelS(gu, gl);
+% R_munu = ricciTAlt(G,gu);
+
 
 % Calculate the Ricci scalar
 R = ricciS(R_munu,gu);
 
+
 % Calculate Einstien tensor
 E = einT(R_munu,R,gl);
 
+
 % Calculate Energy density
 energyDensity = einE(E,gu);
-%toc
 
-
-%fprintf('Done!\n')
 end
 
 

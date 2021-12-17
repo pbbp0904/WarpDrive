@@ -1,7 +1,9 @@
 function [R_munu] = ricciT2(gu,gl)
-%RICCI calculates the Ricci tensor for a given christoffel symbols
+%RICCI calculates the Ricci tensor for a given metric tensor and its
+%inverse
 
-
+% Form from (https://en.wikipedia.org/wiki/Ricci_curvature) introduction section
+% Same as T4 and T6, Very slow
 [t,x,y,z] = size(gl{1,1});
 
 % Ricci tensor

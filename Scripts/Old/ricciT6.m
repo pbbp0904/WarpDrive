@@ -2,7 +2,8 @@ function [R_munu] = ricciT6(gu,gl)
 %RICCI calculates the Ricci tensor for a given metric tensor and its
 %inverse
 
-
+% Form from (https://en.wikipedia.org/wiki/Ricci_curvature) introduction section
+% Same as T2 and T4
 [t,x,y,z] = size(gl{1,1});
 s = [t,x,y,z];
 
