@@ -12,7 +12,7 @@ sizeScale = 2;
 %Plateau donut offset from axis
 offset = 20;
 % Plateau Height, This is equivilent to the apparent warp velocity
-goalHeight = 2;
+goalHeight = 3*10^-9;
 % XYZ Padding
 padding = 3;
 % Z Symmetry
