@@ -14,7 +14,7 @@
 - The sliceomatic tool is handy to quickly visualize metrics and energy densities in 3D space. Call it by passing it a x by y by z array of values: sliceomatic(my3DArray)
 
 ## Contact
-Christopher Helmerich: cdh0028@uah.edu
+Christopher Helmerich: cdh0028@uah.edu  
 Jared Fuchs: jef0011@uah.edu
 
 ## Publications
