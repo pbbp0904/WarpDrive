@@ -15,6 +15,7 @@
 
 ## Contact
 Christopher Helmerich - cdh0028@uah.edu
+
 Jared Fuchs - jef0011@uah.edu
 
 ## Publications
