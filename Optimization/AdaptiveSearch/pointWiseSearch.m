@@ -1,15 +1,15 @@
 %%%% Starting Params
 % Z Dimension Size
-zDim = 32;
+zDim = 16;
 % R Dimension Size
-rDim = 64;
+rDim = 32;
 % Plateau Radius
-innerR = 30;
-% Plateau depth
+innerR = 16;
+% Plateau z depth
 depth = 4;
 % Plateau Scale
 sizeScale = 2;
-%Plateau donut offset from axis
+% Plateau donut offset from axis
 offset = 20;
 % Plateau Height, This is equivilent to the apparent warp velocity
 goalHeight = 2;
