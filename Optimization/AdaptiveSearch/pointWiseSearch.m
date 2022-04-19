@@ -2,11 +2,11 @@
 % Z Dimension Size
 zDim = 16;
 % R Dimension Size
-rDim = 32;
+rDim = 20;
 % Plateau Radius
-innerR = 16;
+innerR = 6;
 % Plateau z depth
-depth = 4;
+depth = 2;
 % Plateau Scale
 sizeScale = 2;
 % Plateau donut offset from axis
@@ -24,7 +24,7 @@ maxLoop = 1000000000;
 maxIter = 6;
 
 % Starting magnitude of adjustment scalar
-initialAdjustmentScalar = -goalHeight/10;
+initialAdjustmentScalar = goalHeight/5;
 % Randomness in adjustment scalar value
 randomAd = 0;
 
@@ -223,6 +223,7 @@ for rounds = 1:maxIter
                 % If the energy in the region is now less, update the shift
                 % matrix and the total energy and save the results
                 if energyReduction
+
                     % Update State
                     shiftMatrix = tempShiftMatrix;
                     energyPos = energyPos-(abs(slicedEnergyPos)-abs(slicedTempEnergyPos));
@@ -251,6 +252,7 @@ for rounds = 1:maxIter
                     fprintf('.')
                     failTracker = failTracker + 1;
                 end
+                drawWarpFieldPW(shiftMatrix)
             end
         end
         
