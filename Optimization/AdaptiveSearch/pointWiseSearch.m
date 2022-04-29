@@ -41,11 +41,11 @@ sliceDistance = 5;
 % Makes the initial shift matrix with the plateau
 % also computes the points inside the plateau that the interation should ignore
 
-%[shiftMatrixStart, plateauPoints] = makeAlcubierreShiftMatrixPW(rDim,zDim,innerR,goalHeight,0.3);
+[shiftMatrixStart, plateauPoints] = makeAlcubierreShiftMatrixPW(rDim,zDim,innerR,goalHeight,0.3);
 %[shiftMatrixStart, plateauPoints] = makeExponentialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
 %shiftMatrixStart = round(shiftMatrixStart,1);
 %[shiftMatrixStart, plateauPoints] = makeInitialShiftMatrixPW(rDim,zDim,innerR,goalHeight);
-[shiftMatrixStart, plateauPoints] = makeCylindricalShiftMatrixPW(rDim,zDim,innerR,depth,goalHeight);
+%[shiftMatrixStart, plateauPoints] = makeCylindricalShiftMatrixPW(rDim,zDim,innerR,depth,goalHeight);
 %[shiftMatrixStart, plateauPoints] = makeDonutShiftMatrixPW(rDim,zDim,innerR,depth,offset,goalHeight);
 %[shiftMatrixStart, plateauPoints] = makeStreamlineShiftMatrixPW(rDim,zDim,sizeScale,goalHeight);
 
